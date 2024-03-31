@@ -139,6 +139,7 @@ start_time = 0
 score = 0
 bg_music = pygame.mixer.Sound('audio/music.wav')
 bg_music.set_volume(0.1)
+bg_music.play(loops = -1)
 
 #Groups
 player = pygame.sprite.GroupSingle()
@@ -228,8 +229,8 @@ while True:
 
         if game_active:
             if event.type == obstacle_timer:
-                obstacle_group.add(Obstacle(random.choice(['fly', 'snail', 'snail', 'snail'])))
-                bg_music.play()
+                obstacle_group.add(Obstacle(random.choice(['fly', 'snail', 'snail'])))
+
                 #if randint(0,2):
                 #    obstacle_rect_list.append(snail_surf.get_rect(bottomright = (randint(900,1100), 300)))
                 #else:
@@ -303,7 +304,7 @@ while True:
         score_message_rect = score_message.get_rect(center = (400, 350))
         screen.blit(game_title, game_title_rect)
 
-        bg_music.stop()
+        #bg_music.stop()
 
         if score == 0:
             screen.blit(game_instr, game_instr_rect)
