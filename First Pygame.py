@@ -67,9 +67,9 @@ class Obstacle(pygame.sprite.Sprite):
         self.image = self.frames[int(self.animation_index)]
 
     def update(self):
-        self.amimation
+        self.amimation()
         self.rect.x -= 6
-        self.destroy
+        self.destroy()
 
     def destroy(self):
         if self.rect.x <= -100:
@@ -116,6 +116,14 @@ def player_animation():
         if player_index >= len(player_walk):
             player_index = 0
         player_surf = player_walk[int(player_index)]
+
+def collision_sprite():
+    if pygame.sprite.spritecollide(player.sprite, obstacle_group, False):
+        obstacle_group.empty()
+        return False
+    else: 
+        return True
+
 
 pygame.init()
 screen = pygame.display.set_mode((800, 400))
@@ -270,6 +278,7 @@ while True:
         #obstacle_rect_list = obstacle_movement(obstacle_rect_list)
 
         #collisions
+        game_active = collision_sprite()
         #game_active = collisions(player_rect, obstacle_rect_list)
 
         #Collision with snail ending game
