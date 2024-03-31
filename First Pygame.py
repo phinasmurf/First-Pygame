@@ -16,10 +16,14 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = (80, 300))
         self.gravity = 0
 
+        self.jump_sound = pygame.mixer.Sound('audio/jump.mp3')
+        self.jump_sound.set_volume(0.3)
+
     def player_input(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
             self.gravity = -20
+            self.jump_sound.play()
 
     def apply_gravity(self):
         self.gravity += 1
@@ -83,7 +87,7 @@ def display_score():
     screen.blit(score_surf, score_rect)
     return current_time
 
-def obstacle_movement(obstacle_list):
+#def obstacle_movement(obstacle_list):
     if obstacle_list:
         for obstacle_rect in obstacle_list:
             obstacle_rect.x -= 5
@@ -133,6 +137,8 @@ test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
 game_active = False
 start_time = 0
 score = 0
+bg_music = pygame.mixer.Sound('audio/music.wav')
+bg_music.set_volume(0.1)
 
 #Groups
 player = pygame.sprite.GroupSingle()
@@ -155,18 +161,18 @@ game_instr = test_font.render('Press space to start', False, (64, 64, 64))
 game_instr_rect = game_instr.get_rect(center = (400, 350))
 
 #Snail
-snail_frame_1 = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
-snail_frame_2 = pygame.image.load('graphics/snail/snail2.png').convert_alpha()
-snail_frames = [snail_frame_1, snail_frame_2]
-snail_frame_index = 0
-snail_surf = snail_frames[snail_frame_index]
+#snail_frame_1 = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
+#snail_frame_2 = pygame.image.load('graphics/snail/snail2.png').convert_alpha()
+#snail_frames = [snail_frame_1, snail_frame_2]
+#snail_frame_index = 0
+#snail_surf = snail_frames[snail_frame_index]
 
 #Fly
-fly_frame_1 = pygame.image.load('graphics/fly/Fly1.png').convert_alpha()
-fly_frame_2 = pygame.image.load('graphics/fly/Fly2.png').convert_alpha()
-fly_frames = [fly_frame_1, fly_frame_2]
-fly_frame_index = 0
-fly_surf = fly_frames[fly_frame_index]
+#fly_frame_1 = pygame.image.load('graphics/fly/Fly1.png').convert_alpha()
+#fly_frame_2 = pygame.image.load('graphics/fly/Fly2.png').convert_alpha()
+#fly_frames = [fly_frame_1, fly_frame_2]
+#fly_frame_index = 0
+#fly_surf = fly_frames[fly_frame_index]
 
 
 obstacle_rect_list = []
@@ -223,24 +229,25 @@ while True:
         if game_active:
             if event.type == obstacle_timer:
                 obstacle_group.add(Obstacle(random.choice(['fly', 'snail', 'snail', 'snail'])))
+                bg_music.play()
                 #if randint(0,2):
                 #    obstacle_rect_list.append(snail_surf.get_rect(bottomright = (randint(900,1100), 300)))
                 #else:
                 #    obstacle_rect_list.append(fly_surf.get_rect(bottomright = (randint(900,1100), 210)))
 
-            if event.type == snail_animation_timer:
-                if snail_frame_index == 0:
-                    snail_frame_index = 1
-                else:
-                    snail_frame_index = 0
-                snail_surf = snail_frames[snail_frame_index]
+            #if event.type == snail_animation_timer:
+            #    if snail_frame_index == 0:
+            #        snail_frame_index = 1
+            #    else:
+            #        snail_frame_index = 0
+            #    snail_surf = snail_frames[snail_frame_index]
         
-            if event.type == fly_animation_timer:
-                if fly_frame_index == 0:
-                    fly_frame_index = 1
-                else:
-                    fly_frame_index = 0
-                fly_surf = fly_frames[fly_frame_index]
+            #if event.type == fly_animation_timer:
+            #    if fly_frame_index == 0:
+            #        fly_frame_index = 1
+            #    else:
+            #        fly_frame_index = 0
+            #    fly_surf = fly_frames[fly_frame_index]
 
     if game_active:        
         #Sky and ground 
@@ -295,6 +302,8 @@ while True:
         score_message = test_font.render(f'Your score: {score}', False, (64, 64, 64))
         score_message_rect = score_message.get_rect(center = (400, 350))
         screen.blit(game_title, game_title_rect)
+
+        bg_music.stop()
 
         if score == 0:
             screen.blit(game_instr, game_instr_rect)
